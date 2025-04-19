@@ -1,26 +1,26 @@
-There are two main files in this folder:
+modular architecture that makes it easy to:
+Swap out CNNs or even other neural architectures Customize training from the command line Use Weights & Biases (wandb) for experiment tracking and sweeps.
 
-convnetwork.py
-train.py
-convnetwork.py
-This is the class implementation of LightningModule so that it is flexible to create differnt types of CNN or other type of models. We can choose  to decide model, loss_function, accuracy_function, optimizer_function, optimizer_params.
+A2_conv.py
+You’re essentially building a plug-and-play LightningModule:
 
-model = torch.nn.Sequential(
-    torch.nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3),
-    torch.nn.Linear(128, 10)
-)
-optimizer_function = torch.optim.Adam
-optimizer_params = {}
-accuracy_function = torchmetrics.Accuracy(task="multiclass", num_classes=10)
-loss_function = torch.nn.CrossEntropyLoss()
+Users define model = nn.Sequential(...) or custom modules
+Define custom loss_function, accuracy_function, optimizer_function, and optimizer_params,Pass them all into ConvolutionalNN for a reusable training logic.This makes A2_conv.py a flexible training backend.
 
-model = ConvolutionalNN(model=model, loss_function=loss_function, accuracy_function=accuracy_function, 
-optimizer_function=optimizer_function, optimizer_params=optimizer_params)
-train.py
-This is a command line executable code for easy designing of architecture, this file is also getting used to preform wandb sweeps. The command line arguments are as follows:
+A2_train.py
+This is experiment driver with CLI support. You can do things like:
 
-train.py [-h] [-wandb_project WANDB_PROJECT] [-wandb_entity WANDB_ENTITY] [-wandb_sweepid WANDB_SWEEPID] [-dataset {inaturalist_12K}] [-epochs EPOCHS]
-                [-batch_size BATCH_SIZE] [-activation_function {ReLU,Tanh,GELU,Mish,LeakyReLU}] [-filter_size FILTER_SIZE]
-                [-filter_change_ratio FILTER_CHANGE_RATIO] [-stride STRIDE] [-padding PADDING] [-size_dense SIZE_DENSE]
-                [-data_augmentation DATA_AUGMENTATION] [-batch_normalization BATCH_NORMALIZATION] [-dropout_ratio DROPOUT_RATIO]
-                [-convolutional_layers CONVOLUTIONAL_LAYERS]
+bash
+Copy
+Edit
+python A2_train.py --dataset inaturalist_12K --epochs 50 --batch_size 64 --activation_function ReLU --filter_size 3
+And use it for wandb sweeps:
+
+bash
+Copy
+Edit
+python A2_train.py --wandb_project myproject --wandb_entity myname --wandb_sweepid sweep123,Which is awesome for reproducibility and scalability.
+
+
+ Building a flexible CNN generator based on args like filter_size, activation_function, convolutional_layers, Adding validation/test metrics and logging them to wandb, Packaging the CLI for more model types (like ResNet, MLPs, etc.)
+Computing the number of parameters or FLOPs per model, Automatically saving best models via ModelCheckpoint,Also, if you want to show how ConvolutionalNN is structured or want help expanding it (e.g., to support schedulers or early stopping).
