@@ -1,3 +1,5 @@
+**PART-A**
+
 modular architecture that makes it easy to:
 Swap out CNNs or even other neural architectures Customize training from the command line Use Weights & Biases (wandb) for experiment tracking and sweeps.
 
