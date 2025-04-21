@@ -12,15 +12,11 @@ Define custom loss_function, accuracy_function, optimizer_function, and optimize
 A2_train.py
 This is experiment driver with CLI support. You can do things like:
 
-bash
-Copy
-Edit
+
 python A2_train.py --dataset inaturalist_12K --epochs 50 --batch_size 64 --activation_function ReLU --filter_size 3
 And use it for wandb sweeps:
 
-bash
-Copy
-Edit
+
 python A2_train.py --wandb_project myproject --wandb_entity myname --wandb_sweepid sweep123,Which is good for reproducibility and scalability.
 
 
